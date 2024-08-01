@@ -6,7 +6,7 @@
 /*   By: lloginov <lloginov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 21:46:18 by lloginov          #+#    #+#             */
-/*   Updated: 2024/08/01 16:29:55 by lloginov         ###   ########.fr       */
+/*   Updated: 2024/08/01 18:28:04 by lloginov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,13 @@ void ft_bzero(void *s, size_t n)
 	}
 }
 
-void ft_free(char *str)
+int ft_free(char *str)
 {
 	free(str);
+	return(0);
 }
 
-ft_strdup(char *s1)
+char *ft_strdup(char *s1)
 {
 	char *s2;
 	size_t i;
@@ -49,7 +50,7 @@ ft_strdup(char *s1)
 }
 
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	size_t	i;
 	size_t	j;
@@ -78,12 +79,29 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 char *get_next_line(int fd)
 {
-	static char buffer;
-	char *ligne;
-
+	int		i;
+	char	*ligne;
+	char	buffer[BUFFER_SIZE + 1];
+	static char gnl[BUFFER_SIZE + 1];
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (NULL);
-	
+	ligne = ft_strdup(gnl);
+	ft_bzero(&gnl, BUFFER_SIZE + 1);
+	while (ft_strchr(ligne,'\n')==NULL)
+	{
+		i = read(fd, &buffer, BUFFER_SIZE);
+			if(i == 0)
+				break;
+		if(i < 0 && ft_free(ligne))
+			return(NULL);
+		buffer[i] = '\0';
+		ligne = (ft_strjoin(ligne, buffer));
+	}
+	ft_strncpy(gnl,ligne,'\n');
+	ligne = ft_split(ligne,'\n');
+	if(ft_strlen(ligne) == 0 && ft_free(ligne))
+		return (NULL);
+	return (ligne);
 }
 
 int main(void)
@@ -92,6 +110,9 @@ int main(void)
 	fd = 0;
 
 	fd = open("test.txt", O_RDONLY);
+	printf("%s \n", get_next_line(fd));
+	printf("%s \n", get_next_line(fd));
+	printf("%s \n", get_next_line(fd));
 	printf("%s \n", get_next_line(fd));
 
 	close(fd);

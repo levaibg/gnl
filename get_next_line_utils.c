@@ -6,7 +6,7 @@
 /*   By: lloginov <lloginov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 21:46:28 by lloginov          #+#    #+#             */
-/*   Updated: 2024/07/12 18:43:54 by lloginov         ###   ########.fr       */
+/*   Updated: 2024/08/01 18:45:48 by lloginov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,14 @@ char	*ft_split(char *src, char car)
 	i = 0;
 	j= 0;
 
-	if(strchr(src, car) == NULL);
-		return(arc);
-	while(src[j] != car)
+	if(ft_strchr(src, car) == NULL)
+		return(src);
+	while(src[j] != car &&  src[j] != '\0')
 		j++;
-	str = malloc(sizeof(char) * (j + 2));
+	str = malloc(sizeof(char) * (j + 1));
 	if (!str)
 		return (NULL);
-	while(i < j + 2)
+	while(i < j)
 	{
 		str[i] = src[i];
 		i++;
@@ -52,15 +52,15 @@ char	*ft_split(char *src, char car)
 	return (str);
 }
 
-char	*ft_strchr(const char *s, int c)
+char *ft_strchr(const char *s, int c) 
 {
-	while ((char)c != *s)
+    while (*s) 
 	{
-		if (!*s)
-			return (NULL);
-		s++;
-	}
-	return((char *)s);
+        if (*s == (char)c) 
+			return (char *)s;
+        s++;
+    }
+    return (c == '\0') ? (char *)s : NULL;
 }
 
 
@@ -75,12 +75,13 @@ char *ft_strcpy(char *a, char *b)
 	
 	while (a[i] && b[j])
 	{
-		a[i] = b[j]
+		a[i] = b[j];
 		i++;
 	}
 
 	return (a);
 }
+
 
 char *ft_strncpy(char *s1, char*s2, char c)
 {
@@ -95,6 +96,7 @@ char *ft_strncpy(char *s1, char*s2, char c)
 	}
 	if(ft_strlen(s2) == i)
 		return(NULL);
+	i++;
 	while (s2[i])
 	{
 		s1[j] = s2[i];
