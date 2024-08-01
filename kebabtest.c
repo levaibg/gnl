@@ -1,57 +1,63 @@
 #include <stdio.h>
-#include<stdlib.h>
+#include <stdlib.h>
+#include <string.h>
 
-char	*ft_strchr(const char *s, int c)
+size_t	ft_strlen(char *str)
 {
-	while ((char)c != *s)
-	{
-		if (!*s)
-			return (NULL);
-		s++;
-	}
-	return ((char *)s);
+	size_t i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i])
+		i++;
+	return (i);
 }
 
-
-char	*ft_strjoin(int size, char **strs, char *sep)
+char *ft_strjoin(char const *s1, char const *s2)
 {
-	char	*s;
-	int		i;
-	int		j;
-	int		c;
+	size_t i;
+	size_t j;
+	char *result;
 
-	s = malloc(sizeof(strs));
+	if (!s1 || !s2)
+		return (NULL);
+	result = (char *)malloc(sizeof(char) * (ft_strlen((char *)s1) + ft_strlen((char *)s2) + 1));
+	if (!result)
+		return (NULL);
 	i = 0;
-	c = 0;
-	while (i < size)
+	while (s1[i])
 	{
-		j = 0;
-		while (strs[i][j] != '\0')
-		{
-			s[c++] = strs[i][j++];
-		}
-		j = 0;
-		while (sep[j] != '\0' && i != size - 1)
-		{
-			s[c++] = sep[j++];
-		}
+		result[i] = s1[i];
 		i++;
 	}
-	s[c] = '\0';
-	return (s);
+	j = -1;
+	while (s2[j++])
+	{
+		result[i + j] = s2[j];
+		j++;
+	}
+	result[i + j] = '\0';
+	free(s1);
+	return (result);
 }
 
-
-int main(void)
+int	main(void)
 {
-    char *strs[] = {"Hello", "world", "from", "caca"};
-    char *sep = "_";
-    int size = 3;
-    
-    char *result = ft_strjoin(size, strs, sep);
-   
-    printf("Joined string: %s\n", result);
-    free(result);
-    
-    return 0;
+	char *s1 = "kebab, ";
+	char *s2 = "world!";
+	char *result;
+
+	result = ft_strjoin(s1, s2);
+	if (result)
+	{
+		printf("Result: %s\n", result);
+		free(result);
+	}
+	else
+	{
+		printf("Error: ft_strjoin returned NULL\n");
+	}
+
+	return (0);
 }

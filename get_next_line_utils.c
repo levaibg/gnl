@@ -12,45 +12,44 @@
 
 #include "get_next_line.h"
 
-void	ft_bzero(void *s, size_t n)
-{
-	char	*i;
 
-	i = s;
-	while (n)
-	{
-		*i = 0;
+
+size_t	ft_strlen(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i])
 		i++;
-		n--;
-	}
+	return (i);
 }
 
-void	*ft_calloc(size_t count, size_t size)
+char	*ft_split(char *src, char car)
 {
-	void	*ptr;
+	int	i;
+	int	j;
+	char *str;
 
-	if (count != 0 && (count * size) / count != size)
+	i = 0;
+	j= 0;
+
+	if(strchr(src, car) == NULL);
+		return(arc);
+	while(src[j] != car)
+		j++;
+	str = malloc(sizeof(char) * (j + 2));
+	if (!str)
 		return (NULL);
-	ptr = (void *)malloc(count * size);
-	if (!ptr)
-		return (NULL);	
-	size_t n;
-	char	*i;
-
-	n = count * size;
-	i = ptr;
-	while (n)
+	while(i < j + 2)
 	{
-		*i = 0;
+		str[i] = src[i];
 		i++;
-		n--;
 	}
-	return (ptr);
-}
-
-char *ft_strjoin(char *s1, char *s2)
-{
-	
+	free(src);
+	str[i] = '\0';
+	return (str);
 }
 
 char	*ft_strchr(const char *s, int c)
@@ -72,35 +71,36 @@ char *ft_strcpy(char *a, char *b)
 	i = 0;
 	j = 0;
 	while (a[i] != '\0')
-	{
 		i++;
-	}
 	
 	while (a[i] && b[j])
 	{
 		a[i] = b[j]
+		i++;
 	}
-	a[i] = '\0';
+
 	return (a);
 }
 
-char	*ft_strcat(char *dest, char *src)
+char *ft_strncpy(char *s1, char*s2, char c)
 {
-	int	i;
-	int	j;
+	int i;
+	int j;
 
-	j = 0;
 	i = 0;
-	while (dest[i] != '\0')
+	j = 0;
+	while(s2[i] && s2[i] != c)
 	{
 		i++;
 	}
-	while (src[j] != '\0')
+	if(ft_strlen(s2) == i)
+		return(NULL);
+	while (s2[i])
 	{
-		dest[i] = src[j];
+		s1[j] = s2[i];
 		i++;
 		j++;
 	}
-	dest[i] = '\0';
-	return (dest);
+	s1[j] = '\0';
+	return(s1);
 }
