@@ -6,17 +6,17 @@
 /*   By: lloginov <lloginov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 21:46:18 by lloginov          #+#    #+#             */
-/*   Updated: 2024/08/01 18:28:04 by lloginov         ###   ########.fr       */
+/*   Updated: 2024/10/12 23:26:53 by lloginov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void ft_bzero(void *s, size_t n)
+void	ft_bzero(void *s, size_t n)
 {
-	char *i;
+	char	*i;
 
-	i = s;
+	i = (char *)s;
 	while (n)
 	{
 		*i = 0;
@@ -25,16 +25,10 @@ void ft_bzero(void *s, size_t n)
 	}
 }
 
-int ft_free(char *str)
+char	*ft_strdup(char *s1)
 {
-	free(str);
-	return(0);
-}
-
-char *ft_strdup(char *s1)
-{
-	char *s2;
-	size_t i;
+	char	*s2;
+	size_t	i;
 
 	i = 0;
 	s2 = malloc(sizeof(char) * (ft_strlen(s1) + 1));
@@ -49,7 +43,6 @@ char *ft_strdup(char *s1)
 	return (s2);
 }
 
-
 char	*ft_strjoin(char *s1, char *s2)
 {
 	size_t	i;
@@ -58,7 +51,7 @@ char	*ft_strjoin(char *s1, char *s2)
 
 	if (!s1 || !s2)
 		return (NULL);
-	result = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	result = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!result)
 		return (NULL);
 	i = 0;
@@ -74,46 +67,112 @@ char	*ft_strjoin(char *s1, char *s2)
 		j++;
 	}
 	result[i + j] = '\0';
+	free(s1);
+	
 	return (result);
 }
-
-char *get_next_line(int fd)
+char	*ft_ligne(int fd, char *ligne, char *buffer)
 {
-	int		i;
-	char	*ligne;
-	char	buffer[BUFFER_SIZE + 1];
-	static char gnl[BUFFER_SIZE + 1];
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	int i;
+	
+	while (!ft_strchr(ligne, '\n'))
+	{
+		i = read(fd, buffer, BUFFER_SIZE);
+		buffer[i] = '\0';
+		if (i == 0)
+			break;
+		if (i < 0)
+		{
+			free(ligne);
+			return (NULL);
+		}
+		
+		ligne = ft_strjoin(ligne, buffer);
+		if (!ligne)
+		{
+			free(ligne);
+			return (NULL);
+		}
+	}
+	return (ligne);
+
+}
+
+char	*get_next_line(int fd)
+{
+	char			*ligne;
+	char			buffer[BUFFER_SIZE + 1];
+	static char		gnl[BUFFER_SIZE + 1];
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	ligne = ft_strdup(gnl);
-	ft_bzero(&gnl, BUFFER_SIZE + 1);
-	while (ft_strchr(ligne,'\n')==NULL)
+	
+	ft_bzero(gnl, BUFFER_SIZE + 1);
+	ligne = ft_ligne(fd, ligne, buffer);
+	if (ligne == NULL)
 	{
-		i = read(fd, &buffer, BUFFER_SIZE);
-			if(i == 0)
-				break;
-		if(i < 0 && ft_free(ligne))
-			return(NULL);
-		buffer[i] = '\0';
-		ligne = (ft_strjoin(ligne, buffer));
+		free(ligne);
+		return(NULL);
 	}
-	ft_strncpy(gnl,ligne,'\n');
-	ligne = ft_split(ligne,'\n');
-	if(ft_strlen(ligne) == 0 && ft_free(ligne))
+	ft_strncpy(gnl, ligne, '\n');
+	ligne = ft_split(ligne, '\n');
+	if (ft_strlen(ligne) == 0)
+	{
+		free(ligne);
 		return (NULL);
+	}
 	return (ligne);
 }
 
-int main(void)
+
+// int	main(void)
+// {
+// 	int fd;
+
+// 	fd = open("get_next_line.c", O_RDONLY);
+// 	printf("%s\n",get_next_line(fd));
+// 	printf("%s\n",get_next_line(fd));
+// 	printf("%s\n",get_next_line(fd));
+// 	printf("%s\n",get_next_line(fd));
+// 	printf("%s\n",get_next_line(fd));
+// 	printf("%s\n",get_next_line(fd));
+// 	close(fd);
+// }
+
+int	main(void)
 {
-	int fd;
-	fd = 0;
+	int	fd;
 
 	fd = open("test.txt", O_RDONLY);
-	printf("%s \n", get_next_line(fd));
-	printf("%s \n", get_next_line(fd));
-	printf("%s \n", get_next_line(fd));
-	printf("%s \n", get_next_line(fd));
-
-	close(fd);
+	int i = 0;
+	while (i < 10)
+	{
+		char *line = get_next_line(fd);
+		printf("Line is: %s ...\n\n", line);
+		printf("Pointer of: %p ...\n\n", line);
+		free(line);
+		i++;
+	}
 }
+
+
+// int	main(void)
+// {
+// 	int	fd;
+// 	char *levmoi;
+// 	fd = open("test.txt", O_RDONLY);
+	
+// 	levmoi =  get_next_line(fd);
+// 	printf("%s", levmoi);
+// 	free(levmoi);
+// 	levmoi =  get_next_line(fd);
+// 	printf("%s", levmoi);
+// 	free(levmoi);
+// 	levmoi =  get_next_line(fd);
+// 	printf("%s", levmoi);
+// 	free(levmoi);
+// 	levmoi =  get_next_line(fd);
+// 	printf("%s", levmoi);
+// 	free(levmoi);
+// }
