@@ -6,7 +6,7 @@
 /*   By: lloginov <lloginov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 21:46:18 by lloginov          #+#    #+#             */
-/*   Updated: 2024/10/12 23:26:53 by lloginov         ###   ########.fr       */
+/*   Updated: 2024/10/12 23:28:52 by lloginov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,21 +140,21 @@ char	*get_next_line(int fd)
 // 	close(fd);
 // }
 
-int	main(void)
-{
-	int	fd;
+// int	main(void)
+// {
+// 	int	fd;
 
-	fd = open("test.txt", O_RDONLY);
-	int i = 0;
-	while (i < 10)
-	{
-		char *line = get_next_line(fd);
-		printf("Line is: %s ...\n\n", line);
-		printf("Pointer of: %p ...\n\n", line);
-		free(line);
-		i++;
-	}
-}
+// 	fd = open("test.txt", O_RDONLY);
+// 	int i = 0;
+// 	while (i < 10)
+// 	{
+// 		char *line = get_next_line(fd);
+// 		printf("Line is: %s ...\n\n", line);
+// 		printf("Pointer of: %p ...\n\n", line);
+// 		free(line);
+// 		i++;
+// 	}
+// }
 
 
 // int	main(void)
